@@ -23,8 +23,11 @@ for quote in quotes:
 
     text = quote["text"]
 
-    # Center text
-    w, h = draw.textsize(text, font=font)
+    # NEW: use textbbox instead of textsize
+    bbox = draw.textbbox((0, 0), text, font=font)
+    w = bbox[2] - bbox[0]
+    h = bbox[3] - bbox[1]
+
     x = (WIDTH - w) / 2
     y = (HEIGHT - h) / 2
 
@@ -49,4 +52,4 @@ for quote in quotes:
     # Save
     img.save(f"images/ObserynX_{quote['id']}.jpg", quality=95)
 
-print("Dark images generated.")
+print("Dark images generated successfully.")
