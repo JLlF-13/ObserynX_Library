@@ -17,8 +17,8 @@ FONT_PATH = "generator/font.ttf"
 FONT_SIZE = 58
 
 for quote in quotes:
-    # Deep dark background with slight random variation
-    base_color = random.randint(5, 15)
+
+    base_color = random.randint(0, 40)  # antes 5–15, ahora mucho más rango
     img = Image.new("RGB", (WIDTH, HEIGHT), (base_color, base_color, base_color))
     draw = ImageDraw.Draw(img)
 
@@ -26,43 +26,55 @@ for quote in quotes:
 
     text = quote["text"]
 
-    # Auto-wrap text
-    wrapped = textwrap.fill(text, width=32)
+    wrapped = textwrap.fill(text, width=random.randint(26, 34))
 
-    # Calculate multiline text size
     bbox = draw.multiline_textbbox((0, 0), wrapped, font=font, spacing=10)
     w = bbox[2] - bbox[0]
     h = bbox[3] - bbox[1]
 
-    # Center text
-    x = (WIDTH - w) / 2
-    y = (HEIGHT - h) / 2
+    position_choice = random.choice(["top", "center", "bottom"])
 
-    # Draw text
+    if position_choice == "top":
+        y = HEIGHT * 0.18
+    elif position_choice == "bottom":
+        y = HEIGHT * 0.65
+    else:
+        y = (HEIGHT - h) / 2
+
+    x = (WIDTH - w) / 2
+
+    text_color = random.randint(150, 220)
+
     draw.multiline_text(
         (x, y),
         wrapped,
         font=font,
-        fill=(180, 180, 180),
+        fill=(text_color, text_color, text_color),
         spacing=10,
         align="center"
     )
 
-    # Vignette effect
+    vignette_strength = random.uniform(1.2, 2.5)
+    vignette_blur = random.randint(60, 140)
+
     vignette = Image.new("L", (WIDTH, HEIGHT), 0)
     for i in range(WIDTH):
         for j in range(HEIGHT):
             dist = ((i - WIDTH/2)**2 + (j - HEIGHT/2)**2)**0.5
-            vignette.putpixel((i, j), int(min(255, dist / 1.8)))
-    vignette = vignette.filter(ImageFilter.GaussianBlur(90))
+            vignette.putpixel((i, j), int(min(255, dist / vignette_strength)))
+
+    vignette = vignette.filter(ImageFilter.GaussianBlur(vignette_blur))
     img = Image.composite(img, Image.new("RGB", (WIDTH, HEIGHT), (0, 0, 0)), vignette)
 
-    # Grain
-    noise = Image.effect_noise((WIDTH, HEIGHT), random.randint(20, 50))
-    noise = noise.convert("L").point(lambda x: x * 0.4)
-    img = Image.blend(img, noise.convert("RGB"), 0.25)
+    grain_intensity = random.randint(40, 120)
+    noise = Image.effect_noise((WIDTH, HEIGHT), grain_intensity)
+    noise = noise.convert("L").point(lambda x: x * random.uniform(0.3, 0.7))
+    img = Image.blend(img, noise.convert("RGB"), random.uniform(0.25, 0.45))
+
+    if random.random() < 0.4:
+        img = img.filter(ImageFilter.GaussianBlur(random.randint(1, 3)))
 
     # Save
     img.save(f"images/ObserynX_{quote['id']}.jpg", quality=95)
 
-print("Dark images generated successfully.")
+print("Dark images generated with strong variations.")
