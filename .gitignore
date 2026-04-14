@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS folder attributes
+Icon?
+._*
+
+# Windows system files
+Thumbs.db
+
+# Virtual environments
+venv/
+env/
+
+# Temporary files
+*.tmp
+*.log
