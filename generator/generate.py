@@ -18,7 +18,8 @@ FONT_SIZE = 58
 
 for quote in quotes:
 
-    base_color = random.randint(0, 40)  # antes 5–15, ahora mucho más rango
+    # Fondo oscuro con variaciones fuertes pero uniformes
+    base_color = random.randint(0, 35)
     img = Image.new("RGB", (WIDTH, HEIGHT), (base_color, base_color, base_color))
     draw = ImageDraw.Draw(img)
 
@@ -26,24 +27,20 @@ for quote in quotes:
 
     text = quote["text"]
 
-    wrapped = textwrap.fill(text, width=random.randint(26, 34))
+    # Auto-wrap para que siempre quepa
+    wrapped = textwrap.fill(text, width=32)
 
+    # Tamaño del texto
     bbox = draw.multiline_textbbox((0, 0), wrapped, font=font, spacing=10)
     w = bbox[2] - bbox[0]
     h = bbox[3] - bbox[1]
 
-    position_choice = random.choice(["top", "center", "bottom"])
-
-    if position_choice == "top":
-        y = HEIGHT * 0.18
-    elif position_choice == "bottom":
-        y = HEIGHT * 0.65
-    else:
-        y = (HEIGHT - h) / 2
-
+    # SIEMPRE centrado
     x = (WIDTH - w) / 2
+    y = (HEIGHT - h) / 2
 
-    text_color = random.randint(150, 220)
+    # Color del texto siempre claro y visible
+    text_color = random.randint(200, 240)
 
     draw.multiline_text(
         (x, y),
@@ -54,8 +51,9 @@ for quote in quotes:
         align="center"
     )
 
-    vignette_strength = random.uniform(1.2, 2.5)
-    vignette_blur = random.randint(60, 140)
+    # Viñeta fuerte pero sin tapar el centro
+    vignette_strength = random.uniform(1.8, 2.8)
+    vignette_blur = random.randint(80, 150)
 
     vignette = Image.new("L", (WIDTH, HEIGHT), 0)
     for i in range(WIDTH):
@@ -66,15 +64,17 @@ for quote in quotes:
     vignette = vignette.filter(ImageFilter.GaussianBlur(vignette_blur))
     img = Image.composite(img, Image.new("RGB", (WIDTH, HEIGHT), (0, 0, 0)), vignette)
 
-    grain_intensity = random.randint(40, 120)
+    # Grano fuerte pero controlado para no tapar texto
+    grain_intensity = random.randint(40, 100)
     noise = Image.effect_noise((WIDTH, HEIGHT), grain_intensity)
-    noise = noise.convert("L").point(lambda x: x * random.uniform(0.3, 0.7))
-    img = Image.blend(img, noise.convert("RGB"), random.uniform(0.25, 0.45))
+    noise = noise.convert("L").point(lambda x: x * random.uniform(0.25, 0.45))
+    img = Image.blend(img, noise.convert("RGB"), random.uniform(0.20, 0.35))
 
-    if random.random() < 0.4:
-        img = img.filter(ImageFilter.GaussianBlur(random.randint(1, 3)))
+    # Blur suave opcional (no afecta al texto)
+    if random.random() < 0.25:
+        img = img.filter(ImageFilter.GaussianBlur(random.randint(1, 2)))
 
     # Save
     img.save(f"images/ObserynX_{quote['id']}.jpg", quality=95)
 
-print("Dark images generated with strong variations.")
+#print("Dark images generated with strong variations and centered text.")
