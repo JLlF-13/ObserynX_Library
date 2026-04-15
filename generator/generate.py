@@ -18,6 +18,13 @@ FONT_SIZE = 58
 
 for quote in quotes:
 
+    output_path = f"images/ObserynX_{quote['id']}.jpg"
+
+    # ⛔ NO regenerar si ya existe
+    if os.path.exists(output_path):
+        print(f"Saltando {output_path}, ya existe.")
+        continue
+
     # Fondo oscuro con variaciones fuertes pero uniformes
     base_color = random.randint(0, 35)
     img = Image.new("RGB", (WIDTH, HEIGHT), (base_color, base_color, base_color))
@@ -64,17 +71,17 @@ for quote in quotes:
     vignette = vignette.filter(ImageFilter.GaussianBlur(vignette_blur))
     img = Image.composite(img, Image.new("RGB", (WIDTH, HEIGHT), (0, 0, 0)), vignette)
 
-    # Grano fuerte pero controlado para no tapar texto
+    # Grano fuerte pero controlado
     grain_intensity = random.randint(40, 100)
     noise = Image.effect_noise((WIDTH, HEIGHT), grain_intensity)
     noise = noise.convert("L").point(lambda x: x * random.uniform(0.25, 0.45))
     img = Image.blend(img, noise.convert("RGB"), random.uniform(0.20, 0.35))
 
-    # Blur suave opcional (no afecta al texto)
+    # Blur suave opcional
     if random.random() < 0.25:
         img = img.filter(ImageFilter.GaussianBlur(random.randint(1, 2)))
 
     # Save
-    img.save(f"images/ObserynX_{quote['id']}.jpg", quality=95)
+    img.save(output_path, quality=95)
 
-#print("Dark images generated with strong variations and centered text.")
+print("Imágenes generadas (solo nuevas).")
