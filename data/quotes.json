@@ -1,26 +1,12 @@
 [
     {
         "id": 1,
+        "type": 1,
         "text": "I just want someone to hold me, let me fall apart in their arms, cry on their lap, and hear them say that everything will be okay."
     },
     {
         "id": 2,
+        "type": 1,
         "text": "I like being alone, but I don’t like being alone with my thoughts — they always end up consuming me."
-    },
-    {
-        "id": 3,
-        "text": "If you feel the urge to return where you left your ghosts behind, don’t. You left for a reason."
-    },
-    {
-        "id": 4,
-        "text": "It hurts when the only one who sees your silent screams is the same one who broke you."
-    },
-    {
-        "id": 5,
-        "text": "I don’t smile or get hopeful anymore. Those emotions always end up hurting the most."
-    },
-    {
-        "id": 6,
-        "text": "It’s tiring to convince your own mind that tomorrow deserves another try."
     }
 ]
