@@ -186,5 +186,3 @@ for quote in quotes:
     img = img.filter(ImageFilter.GaussianBlur(0.5))
 
     img.save(output_path, quality=95)
-
-print("✔ FINAL VERSION: stronger textures + per-type typography colors")
